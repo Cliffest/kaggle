@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from torch.utils.data import DataLoader, TensorDataset
 
-from .dataset import get_input_data
+from .dataset import get_input_data, save_as_csv
 
 
 class trainer:
@@ -113,7 +113,7 @@ class trainer:
         joblib.dump(self.imputer, self.imputer_save_path)
         joblib.dump(self.scaler, self.scaler_save_path)
         
-        print(f"Model and preprocessing tools saved to {self.save_dir}")
+        print(f"Model and preprocessing tools saved to {self.save_dir}\n")
     
     def load_tools(self):
         # 加载预处理工具
@@ -141,6 +141,8 @@ class trainer:
         self.save_model()
     
     def evaluate(self):
+        print("Model Evaluation on test set:")
+
         self.model.eval()
         y_true = []
         y_pred = []
@@ -155,15 +157,10 @@ class trainer:
         print(f"Accuracy: {accuracy_score(y_true, y_pred):.4f}")
         print("\nClassification Report:")
         print(classification_report(y_true, y_pred))
-
-    def save_as_csv(self, array: np.array, output_file_path: str):
-        os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
-
-        df = pd.DataFrame(array, columns=["PassengerId", "Survived"])
-        df.to_csv(output_file_path, index=False)  # 不保存行索引
-        print(f"Save output results to {output_file_path}")
     
     def test(self, test_file: str, output_file_path: str):
+        print("Loading model and making predictions...\n")
+
         self.set_device()
 
         self.load_tools()
@@ -182,4 +179,4 @@ class trainer:
         predictions = np.column_stack((ID, predictions))
         #print(predictions)
 
-        self.save_as_csv(predictions, output_file_path)
+        save_as_csv(predictions, output_file_path)

@@ -1,6 +1,0 @@
-click
-pandas
-scikit-learn
-torch
-torchvision
-torchaudio

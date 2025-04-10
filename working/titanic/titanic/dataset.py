@@ -51,3 +51,11 @@ def get_input_data(file_name: str, is_train: bool, imputer=None, scaler=None) ->
     df = read_csv_file(os.path.join(input_dir, file_name))
     return get_train_data(df, "Survived", imputer, scaler) if is_train else (
            get_test_data(df, imputer, scaler) )
+
+@try_except(False)
+def save_as_csv(array: np.array, output_file_path: str):
+    os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
+
+    df = pd.DataFrame(array, columns=["PassengerId", "Survived"])
+    df.to_csv(output_file_path, index=False)  # 不保存行索引
+    print(f"Save output results to {output_file_path}")

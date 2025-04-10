@@ -4,3 +4,7 @@
 
 # Cache
 __pycache__/
+*.egg-info/
+
+tmp/
+tmp.*
